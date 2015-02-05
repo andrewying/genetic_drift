@@ -1,6 +1,11 @@
 <?php
   class GeneticDriftSimulate
   {
+    public function setUp() {
+      register_shutdown_function(array($this, 'shutdown'));
+      ini_set('max_execution_time', '300');
+    }
+
     public function perform () {
       $key = $this->args['key'];
       $population = $this->args['population'];
@@ -164,7 +169,7 @@
       $status = file_put_contents("logs/" . urlencode($key) . ".json", $output);
 
       if ($status == false) {
-        throw new Exception("Job failed. Unable to write to logs/" . urlencode($key) . ".json");
+        throw new Exception("Unable to write to log file.");
       }
 
       $logFile = file_exists('logs/overall_log.json');
@@ -188,7 +193,11 @@
       $logStatus = file_put_contents("logs/overall_log.json", $logContent);
 
       if ($logStatus == false) {
-        throw new Exception("Job failed. Unable to write to logs/overall_log.json");
+        throw new Exception("Unable to write to log file.");
       }
+    }
+
+    public function shutdown() {
+      throw new Exception("Maximum execution time reached.");
     }
   }
