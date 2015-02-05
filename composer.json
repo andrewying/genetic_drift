@@ -1,5 +1,7 @@
 {
-    "require": {
-        "chrisboulton/php-resque": "1.2.x"
-    }
+  "name": "andrewying/genetic-drift",
+  "description": "A simulator for genetic drift",
+  "require": {
+    "chrisboulton/php-resque": "1.2.x"
+  }
 }
