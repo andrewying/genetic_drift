@@ -1,3 +1,14 @@
 vendor/
 composer.lock
 composer.phar
+vendor/composer/installed.json
+
+vendor/composer/autoload_real.php
+
+vendor/composer/autoload_psr4.php
+
+vendor/composer/autoload_namespaces.php
+
+vendor/autoload.php
+
+composer.lock
