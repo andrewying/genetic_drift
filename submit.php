@@ -6,9 +6,14 @@
   }
   if ($_GET['inputMutation'] == 1) {
     $mutation = true;
+    $mutationRate = $_GET['inputMutationRate'];
+  }
+  elseif ($_GET['inputMutation'] == 0) {
+    $mutation = false;
+    $mutationRate = INF;
   }
   else {
-    $mutation = flase;
+    die('Unknown input for inputMutation');
   }
 
   $key = md5(uniqid(rand(), true));
@@ -19,7 +24,7 @@
         'generations' => $_GET['inputGenerations'],
         'reproduction' => $_GET['inputReproduction'],
         'mutation' => $mutation,
-        'mutationRate' => $_GET['inputMutationRate'],
+        'mutationRate' => $mutationRate,
         'mutationDef' => $_GET['inputMutationDef']
   );
   $token = Resque::enqueue('gene', 'GeneticDriftSimulate', $args, true);

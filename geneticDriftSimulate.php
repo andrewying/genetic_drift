@@ -3,10 +3,10 @@
   {
     public function setUp() {
       register_shutdown_function(array($this, 'shutdown'));
-      ini_set('max_execution_time', '300');
+      set_time_limit(300);
     }
 
-    public function perform () {
+    public function perform() {
       $key = $this->args['key'];
       $population = $this->args['population'];
       $generations = $this->args['generations'];
@@ -64,7 +64,7 @@
           }
         }
 
-        if ($mutation) {
+        if ($mutation == true) {
           $mutationStatus = mt_rand(1, $mutationRate);
 
           if ($mutationStatus == 1) {
@@ -198,6 +198,10 @@
     }
 
     public function shutdown() {
-      throw new Exception('Maximum execution time reached.');
+      $error = error_get_last();
+
+      if ($error != null) {
+        throw new Exception($error['message']);
+      }
     }
   }
