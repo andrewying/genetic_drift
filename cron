@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+  $content = file_get_contents(dirname(__FILE__) . '/logs/overall_log.json');
+
+  if ($content == false){
+    die('Unable to retrieve log file.');
+  }
+
+  $array = json_decode($content, true);
+
+  foreach ($array as $arrKey => $value) {
+    if ($value['remove_time'] < time()) {
+      unlink(dirname(__FILE__) . '/logs/' . $value['key'] . '.json');
+      array_splice($array, $arrkey, 1);
+    }
+  }
+
+  $content = json_encode($array);
+  file_put_contents(dirname(__FILE__) . "/logs/overall_log.json", $content);

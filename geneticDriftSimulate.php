@@ -164,7 +164,31 @@
       $status = file_put_contents("logs/" . urlencode($key) . ".json", $output);
 
       if ($status == false) {
-        throw new Exception("Job failed.");
+        throw new Exception("Job failed. Unable to write to logs/" . urlencode($key) . ".json");
+      }
+
+      $logFile = file_exists('logs/overall_log.json');
+      $arrayLog = array(
+        'key' => $key,
+        'remove_time' => time() + 86400
+      );
+
+      if ($logFile == false) {
+        $logContent = json_encode(array($arrayLog));
+      }
+      else {
+        $content = file_get_contents("logs/overall_log.json");
+        $fromLogArray = json_decode($content, true);
+
+        array_push($fromLogArray, $arrayLog);
+
+        $logContent = json_encode($fromLogArray);
+      }
+
+      $logStatus = file_put_contents("logs/overall_log.json", $logContent);
+
+      if ($logStatus == false) {
+        throw new Exception("Job failed. Unable to write to logs/overall_log.json");
       }
     }
   }
