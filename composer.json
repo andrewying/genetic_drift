@@ -1,8 +1,20 @@
 {
   "name": "andrewying/genetic-drift",
   "description": "A simulator for genetic drift",
+  "author": [
+    {
+      "name": "Andrew Ying",
+      "email": "me@andrewying.com",
+      "homepage": "http://andrewying.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/andrewying/genetic_drift"
+  },
   "require": {
     "chrisboulton/php-resque": "1.2.x",
     "noodlehaus/config": "0.1.x"
-  }
+  },
+  "bin": ["bin"]
 }
