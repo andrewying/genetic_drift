@@ -102,7 +102,7 @@
                 } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
                 $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
-                $alleleFeq[$i][$allele] = 1;
+                $alleleFeq[$i][$alleles] = 1;
                 $individualTmp[$individualRand][$alleleRand] = $alleles;
 
                 $alleles++;
