@@ -114,7 +114,7 @@
                 } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
                 $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
-                $alleleNew = mt_rand(0, count($arrayTmp - 1));
+                $alleleNew = mt_rand(0, count($arrayTmp) - 1);
 
                 $alleleFeq[$i][$arrayTmp[$alleleNew]] = 1;
                 $individualTmp[$individualRand][$alleleRand] = $arrayTmp[$alleleNew];
