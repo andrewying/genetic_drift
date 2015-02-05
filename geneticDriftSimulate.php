@@ -98,7 +98,7 @@
               if (count($arrayTmp) == 0){
                 $individualRand = mt_rand(0, $population - 1);
                 do {
-                  $alleleRand = mt_rand(0, $alleles - 1);
+                  $alleleRand = mt_rand(0, 1);
                 } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
                 $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
@@ -110,7 +110,7 @@
               else {
                 $individualRand = mt_rand(0, $population - 1);
                 do {
-                  $alleleRand = mt_rand(0, $alleles - 1);
+                  $alleleRand = mt_rand(0, 1);
                 } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
                 $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
