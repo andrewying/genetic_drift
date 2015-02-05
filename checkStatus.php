@@ -1,28 +1,28 @@
 <?php
   require 'vendor/autoload.php';
 
-  if (!$_GET["key"]) {
-    die ("Unauthorised access.");
+  if (!$_GET['key']) {
+    die ('Unauthorised access.');
   }
 
-  $key = urldecode($_GET["key"]);
-  $token = urldecode($_GET["token"]);
-  $time = urldecode($_GET["time"]);
+  $key = urldecode($_GET['key']);
+  $token = urldecode($_GET['token']);
+  $time = urldecode($_GET['time']);
   $expireTime = $time + 86400;
 
-  $status = new Resque_Job_Status(urldecode($_GET["token"]));
+  $status = new Resque_Job_Status(urldecode($_GET['token']));
   $statusMessage = $status->get();
 
   if ($statusMessage == Resque_Job_Status::STATUS_COMPLETE) {
-    header("Location:result.php?key=" . urlencode($key) . "&token=" . urlencode($token) . "&time=" . urlencode($time));
-    header("Cache-Control: no-cache, must-revalidate");
+    header('Location:result.php?key=' . urlencode($key) . '&token=' . urlencode($token) . '&time=' . urlencode($time));
+    header('Cache-Control: no-cache, must-revalidate');
   }
   elseif ($statusMessage == Resque_Job_Status::STATUS_FAILED) {
-    header("Location:result.php?status=false");
-    header("Cache-Control: no-cache, must-revalidate");
+    header('Location:result.php?status=false');
+    header('Cache-Control: no-cache, must-revalidate');
   }
   elseif ($statusMessage == false) {
-    die("Token invalid.");
+    die('Token invalid.');
   }
   else {
 ?>

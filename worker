@@ -2,5 +2,5 @@
 <?php
 date_default_timezone_set('GMT');
 
-require dirname(__FILE__) . "/geneticDriftSimulate.php";
-require dirname(__FILE__) . "/vendor/chrisboulton/php-resque/resque.php";
+require dirname(__FILE__) . '/geneticDriftSimulate.php';
+require dirname(__FILE__) . '/vendor/chrisboulton/php-resque/resque.php';

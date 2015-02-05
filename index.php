@@ -1,5 +1,5 @@
 <?php
-  header("Cache-Control: no-cache, must-revalidate");
+  header('Cache-Control: no-cache, must-revalidate');
 ?>
 <!DOCTYPE html>
 <html lang="en">

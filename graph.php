@@ -1,6 +1,6 @@
 <?php
   if (!$_GET['key']) {
-    die("Access denied.");
+    die('Access denied.');
   }
 
   $key = urldecode($_GET['key']);
@@ -10,7 +10,7 @@
   $content = file_get_contents('logs/' . urlencode($key) . '.json');
   $array = json_decode($content, true);
 
-  header("Cache-Control: no-cache, must-revalidate");
+  header('Cache-Control: no-cache, must-revalidate');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +26,7 @@
   <div id="tooltip" style="position: absolute; display: none; border: 1px solid #fdd; padding: 2px; background-color: #fee; opacity: 0.80"></div>
   <script>
   <?php
-  if ($_GET['graph'] == "allele") {
+  if ($_GET['graph'] == 'allele') {
   ?>
   var data = new Array(<?php echo count($array['alleleFeq']); ?>);
   <?php

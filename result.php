@@ -1,9 +1,9 @@
 <?php
-  if ($_GET['status'] == "false") {
-    die("Job failed. Please contact the developer of the script at me@andrewying.com.");
+  if ($_GET['status'] == 'false') {
+    die('Job failed. Please contact the developer of the script at me@andrewying.com.');
   }
   elseif (!$_GET['key']) {
-    die("Access denied.");
+    die('Access denied.');
   }
 
   $key = urldecode($_GET['key']);
@@ -13,7 +13,7 @@
   $content = file_get_contents('logs/' . urlencode($key) . '.json');
   $array = json_decode($content, true);
 
-  header("Cache-Control: no-cache, must-revalidate");
+  header('Cache-Control: no-cache, must-revalidate');
 ?>
 <!DOCTYPE html>
 <html lang="en">
