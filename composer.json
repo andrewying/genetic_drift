@@ -2,6 +2,7 @@
   "name": "andrewying/genetic-drift",
   "description": "A simulator for genetic drift",
   "require": {
-    "chrisboulton/php-resque": "1.2.x"
+    "chrisboulton/php-resque": "1.2.x",
+    "noodlehaus/config": "0.1.x"
   }
 }
