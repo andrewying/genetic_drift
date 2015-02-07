@@ -15,6 +15,25 @@
       $mutationRate = $this->args['mutationRate'];
       $mutationDef = $this->args['mutationDef'];
 
+      if ($population < 1) {
+        throw new Exception('Unexpected value for $this->args[\'population\']');
+      }
+      elseif ($generations < 1) {
+        throw new Exception('Unexpected value for $this->args[\'generations\']');
+      }
+      elseif ($reproduction != 1 && $reproduction !=2) {
+        throw new Exception('Unexpected value for $this->args[\'reproduction\']');
+      }
+      elseif ($mutation != true && $mutation != false) {
+        throw new Exception('Unexpected value for $this->args[\'mutation\']');
+      }
+      elseif ($mutation == true && $mutationRate < 1) {
+        throw new Exception('Unexpected value for $this->args[\'mutationRate\']');
+      }
+      elseif ($mutation == true && $mutationDef != 1 && $mutationDef != 2) {
+        throw new Exception('Unexpected value for $this->args[\'mutationDef\']');
+      }
+
       $individual = array();
       $individualTmp = array();
       $alleles = 2;
@@ -166,13 +185,13 @@
 
       $output = json_encode($array);
 
-      $status = file_put_contents(dirname(__DIR__) .  '/logs/' . urlencode($key) . '.json', $output);
+      $status = file_put_contents(dirname(__DIR__) . '/logs/' . urlencode($key) . '.json', $output);
 
       if ($status == false) {
         throw new Exception('Failed to write to ' . dirname(__DIR__) .  '/logs/' . urlencode($key) . '.json');
       }
 
-      $logFile = file_exists(dirname(__DIR__) .  '/logs/overall_log.json');
+      $logFile = file_exists(dirname(__DIR__) . '/logs/overall_log.json');
       $arrayLog = array(
         'key' => $key,
         'remove_time' => time() + 86400
@@ -200,7 +219,7 @@
     public function shutdown() {
       $error = error_get_last();
 
-      if ($error != null) {
+      if ($error != null && $error['type'] == 1) {
         throw new Exception($error['message']);
       }
     }
