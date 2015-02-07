@@ -166,13 +166,13 @@
 
       $output = json_encode($array);
 
-      $status = file_put_contents(dirname(__FILE__) .  '/logs/' . urlencode($key) . '.json', $output);
+      $status = file_put_contents(dirname(__DIR__) .  '/logs/' . urlencode($key) . '.json', $output);
 
       if ($status == false) {
-        throw new Exception('Failed to write to ' . dirname(__FILE__) .  '/logs/' . urlencode($key) . '.json');
+        throw new Exception('Failed to write to ' . dirname(__DIR__) .  '/logs/' . urlencode($key) . '.json');
       }
 
-      $logFile = file_exists(dirname(__FILE__) .  '/logs/overall_log.json');
+      $logFile = file_exists(dirname(__DIR__) .  '/logs/overall_log.json');
       $arrayLog = array(
         'key' => $key,
         'remove_time' => time() + 86400
@@ -182,7 +182,7 @@
         $logContent = json_encode(array($arrayLog));
       }
       else {
-        $content = file_get_contents(dirname(__FILE__) .  '/logs/overall_log.json');
+        $content = file_get_contents(dirname(__DIR__) .  '/logs/overall_log.json');
         $fromLogArray = json_decode($content, true);
 
         array_push($fromLogArray, $arrayLog);
@@ -190,10 +190,10 @@
         $logContent = json_encode($fromLogArray);
       }
 
-      $logStatus = file_put_contents(dirname(__FILE__) . '/logs/overall_log.json', $logContent);
+      $logStatus = file_put_contents(dirname(__DIR__) . '/logs/overall_log.json', $logContent);
 
       if ($logStatus === false) {
-        throw new Exception('Failed to write to ' . dirname(__FILE__) . '/logs/overall_log.json');
+        throw new Exception('Failed to write to ' . dirname(__DIR__) . '/logs/overall_log.json');
       }
     }
 
