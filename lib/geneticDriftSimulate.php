@@ -169,7 +169,7 @@
       $status = file_put_contents(dirname(__FILE__) .  '/logs/' . urlencode($key) . '.json', $output);
 
       if ($status == false) {
-        throw new Exception('Unable to write to log file.');
+        throw new Exception('Failed to write to ' . dirname(__FILE__) .  '/logs/' . urlencode($key) . '.json');
       }
 
       $logFile = file_exists(dirname(__FILE__) .  '/logs/overall_log.json');
@@ -192,8 +192,8 @@
 
       $logStatus = file_put_contents(dirname(__FILE__) . '/logs/overall_log.json', $logContent);
 
-      if ($logStatus == false) {
-        throw new Exception('Unable to write to log file.');
+      if ($logStatus === false) {
+        throw new Exception('Failed to write to ' . dirname(__FILE__) . '/logs/overall_log.json');
       }
     }
 
