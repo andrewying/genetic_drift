@@ -5,16 +5,22 @@
     {
       "name": "Andrew Ying",
       "email": "me@andrewying.com",
-      "homepage": "http://andrewying.com",
-      "role": "Developer"
+      "homepage": "http://andrewying.com"
     }
   ],
   "support": {
     "source": "https://github.com/andrewying/genetic_drift"
   },
   "require": {
-    "chrisboulton/php-resque": "1.2.x",
+    "php": ">=5.3.0",
+    "chrisboulton/php-resque": "dev-master as 1.2.x-dev",
     "noodlehaus/config": "0.1.x"
   },
-  "bin": ["bin"]
+  "autoload": {
+    "classmap": ["lib/"]
+  },
+  "bin": [
+    "bin/worker",
+    "bin/cron"
+  ]
 }
