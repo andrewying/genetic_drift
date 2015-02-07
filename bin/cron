@@ -15,5 +15,5 @@
     }
   }
 
-  $content = json_encode($array);
-  file_put_contents(dirname(__FILE__) . '/logs/overall_log.json', $content);
+  $writeContent = json_encode($array);
+  file_put_contents(dirname(__FILE__) . '/logs/overall_log.json', $writeContent);
