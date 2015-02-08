@@ -161,9 +161,13 @@
       for ($i = 0; $i <= $generations; $i++) {
         foreach ($alleleFeq[$i] as $arrKey => $value) {
           if (!array_key_exists($arrKey, $plotAllele)) {
-            $plotAllele[$arrKey] = array();
+            $plotAllele[$arrKey] = array(
+              'id' => $arrKey,
+              'data' => array(),
+              'label' => $arrKey + 1
+            );
           }
-          array_push($plotAllele[$arrKey], array($i, $value));
+          array_push($plotAllele[$arrKey]['data'], array($i, $value));
         }
       }
 
@@ -179,6 +183,7 @@
         'mutation' => $mutation,
         'mutationRate' => $mutationRate,
         'mutationDef' => $mutationDef,
+        'numAllele' => $alleles,
         'alleleFeq' => $plotAllele,
         'hetero' => $plotHetero
       );
