@@ -1,6 +1,5 @@
 <?php $this->layout('template', ['title' => 'Genetic Drift Simulator']) ?>
 
-<?php $this->start('content') ?>
   <header>
     <div class="row">
       <div class=".col-md-12">
@@ -15,7 +14,7 @@
         </p>
       </div>
     </div>
-    <?php if ($this->e($error) == true): ?>
+    <?php if ($error == true): ?>
       <div id="popZero" class="row">
         <div class=".col-md-12">
           <p class="bg-danger"><?=$this->e($errorMessage)?></p>
@@ -85,26 +84,22 @@
         <button type="submit" name="submit" value="submit" class="btn btn-default">Submit</button>
       </div>
     </div>
-<?php $this->end() ?>
-
-<?php $this->start('footer') ?>
-  <script type="text/javascript">
-    function onInputPopulation() {
-      var population = document.getElementById("inputPopulation").value;
-      document.getElementById("inputFrequency").innerHTML = population;
-    }
-
-    function onChangeMutation() {
-      var mutation = document.getElementById("inputMutation").value;
-
-      if (mutation == 0) {
-        document.getElementById("mutationRate").style.display = 'none';
-        document.getElementById("mutationDef").style.display = 'none';
+    <script type="text/javascript">
+      function onInputPopulation() {
+        var population = document.getElementById("inputPopulation").value;
+        document.getElementById("inputFrequency").innerHTML = population;
       }
-      else {
-        document.getElementById("mutationRate").style.display = 'block';
-        document.getElementById("mutationDef").style.display = 'block';
+
+      function onChangeMutation() {
+        var mutation = document.getElementById("inputMutation").value;
+
+        if (mutation == 0) {
+          document.getElementById("mutationRate").style.display = 'none';
+          document.getElementById("mutationDef").style.display = 'none';
+        }
+        else {
+          document.getElementById("mutationRate").style.display = 'block';
+          document.getElementById("mutationDef").style.display = 'block';
+        }
       }
-    }
-  </script>
-<?php $this->end() ?>
+    </script>

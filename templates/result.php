@@ -74,7 +74,7 @@
       <strong>Mutation Rate</strong>
     </div>
     <div class="col-md-9">
-      <?=$this->e($mutationRate)?>
+      <?=$this->e($jobMutationRate)?>
     </div>
   </div>
   <div class="row">

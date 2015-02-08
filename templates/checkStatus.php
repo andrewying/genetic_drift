@@ -1,10 +1,5 @@
 <?php $this->layout('template', ['title' => 'Job Status - Genetic Drift Simulator']) ?>
 
-<?php $this->start('header') ?>
-  <meta http-equiv="refresh" content="<?=$this->e($updateInterval)?>">
-<?php $this->stop() ?>
-
-<?php $this->start('content') ?>
   <div class="container">
     <header>
       <div class="row">
@@ -51,4 +46,3 @@
       </div>
     </div>
   </div>
-<?php $this->stop() ?>

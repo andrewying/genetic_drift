@@ -1,21 +1,17 @@
 <?php $this->layout('template', ['title' => 'Graph - Genetic Drift Simulator']) ?>
 
-<?php $this->start('header') ?>
   <script type="text/javascript" src="assets/js/jquery.min.js"></script>
   <script type="text/javascript" src="assets/js/jquery.flot.min.js"></script>
-<?php $this->end() ?>
-
-<?php $this->start('content') ?>
   <div id="chart" style="width: 900px; height: 500px;"></div>
   <div id="legendContainer"></div>
   <div id="tooltip" style="position: absolute; display: none; border: 1px solid #fdd; padding: 2px; background-color: #fee; opacity: 0.80"></div>
   <script>
   <?php if ($this->e($graph) == 'allele'): ?>
     var data = new Array(<?=$this->e($numAllele)?>);
-    <?php foreach ($this->e($dataArray) as $data): ?>
-      data[<?=$data->id?>] = {
-        data: <?=$data->data?>,
-        label: "Allele <?=$data->label?>"
+    <?php foreach ($dataArray as $data): ?>
+      data[<?=$this->e($data['id'])?>] = {
+        data: <?=json_encode($data['data'])?>,
+        label: "Allele <?=$this->e($data['label'])?>"
       };
       <?php endforeach ?>
 
@@ -59,10 +55,10 @@
       $("#tooltip").hide();
     }
   });
-  <?php else if ($this->e($graph) == "hetero"): ?>
+  <?php elseif ($this->e($graph) == "hetero"): ?>
     var data = new Array(1);
     data[0] = {
-      data: <?=$this->e($data)?>,
+      data: <?=json_encode($dataArray)?>,
       label: "Number of heterozygous individuals"
     };
 
@@ -108,4 +104,3 @@
     });
   <?php endif ?>
   </script>
-<?php $this->end() ?>
