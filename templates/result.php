@@ -109,9 +109,19 @@
 </div>
 <div class="row">
   <div class="col-md-offset-3 col-md-3">
-    <a class="btn btn-default" onclick="window.open('graph.php?key=<?=$this->e($jobKey)?>&token=<?=$this->e($jobID)?>&time=<?=$this->e($jobSubmitted)?>&graph=allele')">Allele Frequency Graph</a>
+    <a class="btn btn-default" onclick="window.open('graph.php?key=<?=$this->e($jobKey)?>&token=<?=$this->e($jobID)?>&graph=allele')">Allele Frequency Graph</a>
   </div>
   <div class="col-md-3">
-    <a class="btn btn-default" onclick="window.open('graph.php?key=<?=$this->e($jobKey)?>&token=<?=$this->e($jobID)?>&time=<?=$this->e($jobSubmitted)?>&graph=hetero')">Heterozygosity Frequency Graph</a>
+    <a class="btn btn-default" onclick="window.open('graph.php?key=<?=$this->e($jobKey)?>&token=<?=$this->e($jobID)?>&graph=hetero')">Heterozygosity Frequency Graph</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Raw Result File</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-offset-4 col-md-4">
+    <a class="btn btn-default" onclick="window.open('downloadRaw.php?key=<?=$this->e($jobKey)?>&token=<?=$this->e($jobID)?>')">Download File</a>
   </div>
 </div>

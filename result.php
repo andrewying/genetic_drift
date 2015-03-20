@@ -1,6 +1,11 @@
 <?php
   require 'vendor/autoload.php';
 
+  $configs = new Geneticdrift\Config;
+
+  $templates = new League\Plates\Engine($configs->config['web_root'] . '/templates');
+  $templates->loadExtension(new League\Plates\Extension\Asset($configs->config['web_root']));
+
   try {
     if ($_GET['status'] == 'false') {
       throw new Exception('Job failed.');
@@ -46,14 +51,10 @@
       $mutationRate = '1 mutation/' . $array['mutationRate'] . ' generations';
     }
 
-    $templates = new League\Plates\Engine(dirname(__FILE__) . '/templates');
-
     header('Cache-Control: no-cache, must-revalidate');
     echo $templates->render('result', ['jobID' => $token, 'jobKey'=> $key, 'jobSubmitted' => date('r', $time), 'jobPopulation' => $array['population'], 'jobGenerations' => $array['generations'], 'jobReproduction' => $reproduction, 'jobMutation' => $array['mutation'], 'jobMutationRate' => $mutationRate, 'jobMutationDef' => $mutationDef]);
   }
   catch (Exception $e) {
-    $templates = new League\Plates\Engine(dirname(__FILE__) . '/templates');
-
     header('Cache-Control: no-cache, must-revalidate');
-    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString(), 'adminEmail' => $configs->config['admin_email']]);
   }

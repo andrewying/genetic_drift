@@ -1,6 +1,11 @@
 <?php
   require 'vendor/autoload.php';
 
+  $configs = new Geneticdrift\Config;
+
+  $templates = new League\Plates\Engine($configs->config['web_root'] . '/templates');
+  $templates->loadExtension(new League\Plates\Extension\Asset($configs->config['web_root']));
+
   try {
     if (!$_GET['key']) {
       throw new Exception('Invalid GET request. No data received.');
@@ -8,7 +13,6 @@
 
     $key = urldecode($_GET['key']);
     $token = urldecode($_GET['token']);
-    $time = urldecode($_GET['time']);
     $graph = urldecode($_GET['graph']);
 
     $content = file_get_contents('logs/' . urlencode($key) . '.json');
@@ -17,8 +21,6 @@
     }
 
     $array = json_decode($content, true);
-
-    $templates = new League\Plates\Engine(dirname(__FILE__) . '/templates');
 
     header('Cache-Control: no-cache, must-revalidate');
     if ($graph == 'allele') {
@@ -32,8 +34,6 @@
     }
   }
   catch (Exception $e) {
-    $templates = new League\Plates\Engine(dirname(__FILE__) . '/templates');
-
     header('Cache-Control: no-cache, must-revalidate');
-    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString(), 'adminEmail' => $configs->config['admin_email']]);
   }

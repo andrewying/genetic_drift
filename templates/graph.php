@@ -1,10 +1,17 @@
 <?php $this->layout('template', ['title' => 'Graph - Genetic Drift Simulator']) ?>
 
-  <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-  <script type="text/javascript" src="assets/js/jquery.flot.min.js"></script>
-  <div id="chart" style="width: 900px; height: 500px;"></div>
-  <div id="legendContainer"></div>
-  <div id="tooltip" style="position: absolute; display: none; border: 1px solid #fdd; padding: 2px; background-color: #fee; opacity: 0.80"></div>
+  <script type="text/javascript" src="<?=$this->asset('assets/js/jquery.min.js')?>"></script>
+  <script type="text/javascript" src="<?=$this->asset('assets/js/jquery.flot.min.js')?>"></script>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Graph</h3>
+    </div>
+    <div class="panel-body">
+      <div id="chart" style="width: 900px; height: 500px;"></div>
+      <div id="legendContainer"></div>
+      <div id="tooltip" style="position: absolute; display: none; border: 1px solid #fdd; padding: 2px; background-color: #fee; opacity: 0.80"></div>
+    </div>
+  </div>
   <script>
   <?php if ($this->e($graph) == 'allele'): ?>
     var data = new Array(<?=$this->e($numAllele)?>);

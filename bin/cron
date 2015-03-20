@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
-  $content = file_get_contents(dirname(__DIR__) . '/logs/overall_log.json');
+  require dirname(__DIR__) . '/vendor/autoload.php';
+  $configs = new Geneticdrift\Config;
+
+  $content = file_get_contents($configs->config['web_root'] . '/logs/overall_log.json');
 
   if ($content == false){
     die('Unable to retrieve log file.');
@@ -10,10 +13,10 @@
 
   foreach ($array as $arrKey => $value) {
     if ($value['remove_time'] < time()) {
-      unlink(dirname(__DIR__) . '/logs/' . $value['key'] . '.json');
-      array_splice($array, $arrkey, 1);
+      unlink($configs->config['web_root'] . '/logs/' . $value['key'] . '.json');
+      array_splice($array, $arrKey, 1);
     }
   }
 
   $writeContent = json_encode($array);
-  file_put_contents(dirname(__DIR__) . '/logs/overall_log.json', $writeContent);
+  file_put_contents($configs->config['web_root'] . '/logs/overall_log.json', $writeContent);

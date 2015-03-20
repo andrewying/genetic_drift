@@ -7,6 +7,10 @@
     }
 
     public function perform() {
+      require dirname(__DIR__) . '/vendor/autoload.php';
+
+      $configs = new Geneticdrift\Config;
+
       $key = $this->args['key'];
       $population = $this->args['population'];
       $generations = $this->args['generations'];
@@ -92,15 +96,18 @@
               do {
                 $alleleRand = mt_rand(0, 1);
               } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
+
               $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
               do {
                 $alleleNew = mt_rand(0, $alleles);
               } while ($individualTmp[$individualRand][$alleleRand] == $alleleNew);
+
               $individualTmp[$individualRand][$alleleRand] = $alleleNew;
 
               if ($alleleNew == $alleles) {
                 $alleles++;
+                $alleleFeq[$i - 1][$alleleNew] = 0;
                 $alleleFeq[$i][$alleleNew] = 1;
               }
               elseif ($alleleFeq[$i][$alleleNew] == null) {
@@ -121,11 +128,16 @@
 
               if (count($arrayTmp) == 0){
                 $individualRand = mt_rand(0, $population - 1);
+
                 do {
                   $alleleRand = mt_rand(0, 1);
                 } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
+
                 $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
+                if (!issset($alleleFeq[$i - 1][$arrayTmp[$alleleNew]])) {
+                  $alleleFeq[$i - 1][$arrayTmp[$alleleNew]] = 0;
+                }
                 $alleleFeq[$i][$alleles] = 1;
                 $individualTmp[$individualRand][$alleleRand] = $alleles;
 
@@ -133,13 +145,18 @@
               }
               else {
                 $individualRand = mt_rand(0, $population - 1);
+
                 do {
                   $alleleRand = mt_rand(0, 1);
                 } while ($alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]] == 0);
+
                 $alleleFeq[$i][$individualTmp[$individualRand][$alleleRand]]--;
 
                 $alleleNew = mt_rand(0, count($arrayTmp) - 1);
 
+                if (!issset($alleleFeq[$i - 1][$arrayTmp[$alleleNew]])) {
+                  $alleleFeq[$i - 1][$arrayTmp[$alleleNew]] = 0;
+                }
                 $alleleFeq[$i][$arrayTmp[$alleleNew]] = 1;
                 $individualTmp[$individualRand][$alleleRand] = $arrayTmp[$alleleNew];
               }
@@ -193,10 +210,10 @@
       $status = file_put_contents(dirname(__DIR__) . '/logs/' . urlencode($key) . '.json', $output);
 
       if ($status == false) {
-        throw new Exception('Failed to write to ' . dirname(__DIR__) .  '/logs/' . urlencode($key) . '.json');
+        throw new Exception('Failed to write to ' . $configs->config['web_root'] .  '/logs/' . urlencode($key) . '.json');
       }
 
-      $logFile = file_exists(dirname(__DIR__) . '/logs/overall_log.json');
+      $logFile = file_exists($configs->config['web_root'] . '/logs/overall_log.json');
       $arrayLog = array(
         'key' => $key,
         'remove_time' => time() + 86400
@@ -206,7 +223,7 @@
         $logContent = json_encode(array($arrayLog));
       }
       else {
-        $content = file_get_contents(dirname(__DIR__) .  '/logs/overall_log.json');
+        $content = file_get_contents($configs->config['web_root'] .  '/logs/overall_log.json');
         $fromLogArray = json_decode($content, true);
 
         array_push($fromLogArray, $arrayLog);
@@ -214,10 +231,10 @@
         $logContent = json_encode($fromLogArray);
       }
 
-      $logStatus = file_put_contents(dirname(__DIR__) . '/logs/overall_log.json', $logContent);
+      $logStatus = file_put_contents($configs->config['web_root'] . '/logs/overall_log.json', $logContent);
 
       if ($logStatus === false) {
-        throw new Exception('Failed to write to ' . dirname(__DIR__) . '/logs/overall_log.json');
+        throw new Exception('Failed to write to ' . $configs->config['web_root'] . '/logs/overall_log.json');
       }
     }
 

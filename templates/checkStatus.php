@@ -1,6 +1,5 @@
 <?php $this->layout('template', ['title' => 'Job Status - Genetic Drift Simulator']) ?>
 
-  <div class="container">
     <header>
       <div class="row">
         <div class="col-md-12">
@@ -45,4 +44,3 @@
         <?=$this->e($jobStatus)?>
       </div>
     </div>
-  </div>

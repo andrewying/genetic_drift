@@ -1,80 +1,95 @@
 <?php
   require 'vendor/autoload.php';
 
+  $configs = new Geneticdrift\Config;
+
+  $templates = new League\Plates\Engine($configs->config['web_root'] . '/templates');
+  $templates->loadExtension(new League\Plates\Extension\Asset($configs->config['web_root']));
+
   try {
-    if ($_GET['submit'] != 'submit') {
-      throw new Exception('Invalid GET request. No form submission received.');
+    if ($_POST['submit'] != 'submit') {
+      throw new Exception('Invalid POST request. No form submission received.');
     }
 
     $error = false;
 
-    if ($_GET['inputPopulation'] == null) {
+    if ($_POST['inputPopulation'] == null) {
       $error = true;
       $errorMessage = 'Please enter the desired population size.';
     }
-    elseif (ctype_digit(strval($_GET['inputPopulation'])) == false) {
+    elseif (ctype_digit(strval($_POST['inputPopulation'])) == false) {
       $error = true;
       $errorMessage = 'The population size must be an integer.';
     }
-    elseif ($_GET['inputPopulation'] <= 0) {
+    elseif ($_POST['inputPopulation'] <= 0) {
       $error = true;
       $errorMessage = 'The population size cannot be less than or equal to 0.';
     }
-    elseif ($_GET['inputGenerations'] == null) {
+    elseif ($_POST['inputPopulation'] > 10000) {
+      $error = true;
+      $errorMessage = 'The population size cannot be greater than 10000.';
+    }
+    elseif ($_POST['inputGenerations'] == null) {
       $error = true;
       $errorMessage = 'Please enter the desired number of generations.';
     }
-    elseif (ctype_digit(strval($_GET['inputGenerations'])) == false) {
+    elseif (ctype_digit(strval($_POST['inputGenerations'])) == false) {
       $error = true;
       $errorMessage = 'The number of generations must be an integer.';
     }
-    elseif ($_GET['inputGenerations'] <= 0) {
+    elseif ($_POST['inputGenerations'] <= 0) {
       $error = true;
       $errorMessage = 'The number of generations cannot be less than or equal to 0.';
     }
-    elseif ($_GET['inputReproduction'] != 1 && $_GET['inputReproduction'] != 2) {
-      throw new Exception('Invalid GET request. Invalid value for $_GET[\'inputReproduction\']');
+    elseif ($_POST['inputGenerations'] > 10000) {
+      $error = true;
+      $errorMessage = 'The number of generations cannot be greater than 10000.';
+    }
+    elseif ($_POST['inputReproduction'] != 1 && $_POST['inputReproduction'] != 2) {
+      throw new Exception('Invalid GET request. Invalid value for $_POST[\'inputReproduction\']');
     }
     else {
-      if ($_GET['inputMutation'] == 1) {
+      if ($_POST['inputMutation'] == 1) {
         $mutation = true;
 
-        if ($_GET['inputMutationRate'] == null) {
+        if ($_POST['inputMutationRate'] == null) {
           $error = true;
           $errorMessage = 'Please enter the desired rate of mutation.';
         }
-        elseif (ctype_digit(strval($_GET['inputMutationRate'])) == false) {
+        elseif (ctype_digit(strval($_POST['inputMutationRate'])) == false) {
           $error = true;
           $errorMessage = 'The rate of mutation must be an integer.';
         }
-        elseif ($_GET['inputMutationRate'] <= 0) {
+        elseif ($_POST['inputMutationRate'] <= 0) {
           $error = true;
           $errorMessage = 'The rate of mutation cannot be less than or equal to 0.';
         }
-        elseif ($_GET['inputMutationDef'] != 1 && $_GET['inputMutationDef'] != 2) {
-          throw new Exception('Invalid GET request. Invalid value for $_GET[\'inputMutationDef\']');
+        elseif ($_POST['inputMutationDef'] != 1 && $_POST['inputMutationDef'] != 2) {
+          throw new Exception('Invalid POST request. Invalid value for $_POST[\'inputMutationDef\']');
         }
       }
-      elseif ($_GET['inputMutation'] == 0) {
+      elseif ($_POST['inputMutation'] == 0) {
         $mutation = false;
         $mutationRate = INF;
       }
       else {
-        throw new Exception('Invalid GET request. Invalid value for $_GET[\'inputMutation\']');
+        throw new Exception('Invalid POST request. Invalid value for $_POST[\'inputMutation\']');
       }
     }
 
     if ($error == false) {
       $key = md5(uniqid(rand(), true));
 
+      Resque::setBackend($configs->config['redis_server']['server'] . ':' . $configs->config['redis_server']['port']);
+
       $args = array(
         'key' => $key,
-        'population' => $_GET['inputPopulation'],
-        'generations' => $_GET['inputGenerations'],
-        'reproduction' => $_GET['inputReproduction'],
+        'population' => intval($_POST['inputPopulation']),
+        'generations' => intval($_POST['inputGenerations']),
+        'reproduction' => $_POST['inputReproduction'],
         'mutation' => $mutation,
-        'mutationRate' => $_GET['inputMutationRate'],
-        'mutationDef' => $_GET['inputMutationDef']
+        'mutationRate' => intval($_POST['inputMutationRate']),
+        'mutationDef' => $_POST['inputMutationDef']
       );
       $token = Resque::enqueue('gene', 'GeneticDriftSimulate', $args, true);
       $time = time();
@@ -83,16 +98,12 @@
       header('Location: checkStatus.php?key=' . urlencode($key) . '&token=' . urlencode($token) . '&time=' . urlencode($time));
     }
     else {
-      $templates = new League\Plates\Engine(dirname(__FILE__) . '/templates');
-
       header('Cache-Control: no-cache, must-revalidate');
       echo $templates->render('queueForm', ['error' => true, 'errorMessage' => $errorMessage]);
     }
   }
   catch (Exception $e) {
-    $templates = new League\Plates\Engine(dirname(__FILE__) . '/templates');
-
     header('Cache-Control: no-cache, must-revalidate');
     header('HTTP/1.0 400 Bad Request');
-    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString(), 'adminEmail' => $configs->config['admin_email']]);
   }
