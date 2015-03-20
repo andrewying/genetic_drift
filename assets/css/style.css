@@ -1,0 +1,11 @@
+.container {
+  padding: 10px 25px 10px 25px;
+}
+.row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+footer {
+  font-size: 11px;
+  padding: 10px 15px 10px 15px;
+}
