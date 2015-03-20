@@ -24,7 +24,6 @@
     "classmap": ["lib/", "config/"]
   },
   "bin": [
-    "bin/worker",
     "bin/cron"
   ]
 }
