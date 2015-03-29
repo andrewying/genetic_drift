@@ -59,5 +59,6 @@ class Config
     else {
       return $_SERVER['REMOTE_ADDR'];
     }
-}
+  }
+
 }

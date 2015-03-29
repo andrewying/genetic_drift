@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c37f328b79485c66173fafe7ed9f42d7",
+    "hash": "1548425dd907ee52684bb3026e220fd3",
     "packages": [
         {
             "name": "chrisboulton/php-resque",
@@ -198,16 +198,16 @@
         },
         {
             "name": "knplabs/github-api",
-            "version": "1.4.4",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "fe666bd091c8721866654879a031f840b250e4ff"
+                "reference": "d561376583db696f9b09d595f3767af64640ae4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/fe666bd091c8721866654879a031f840b250e4ff",
-                "reference": "fe666bd091c8721866654879a031f840b250e4ff",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/d561376583db696f9b09d595f3767af64640ae4d",
+                "reference": "d561376583db696f9b09d595f3767af64640ae4d",
                 "shasum": ""
             },
             "require": {
@@ -255,7 +255,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2015-02-23 16:36:53"
+            "time": "2015-03-28 00:40:32"
         },
         {
             "name": "league/plates",
