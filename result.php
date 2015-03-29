@@ -6,6 +6,14 @@
   $templates = new League\Plates\Engine($configs->config['web_root'] . '/templates');
   $templates->loadExtension(new League\Plates\Extension\Asset($configs->config['web_root']));
 
+  $status = $configs->appStatus();
+  if (!$status) {
+    header('Cache-Control: no-cache, must-revalidate');
+
+    echo $templates->render('maintenance', ['adminEmail' => $configs->config['admin_email']]);
+    exit;
+  }
+
   try {
     if ($_GET['status'] == 'false') {
       throw new Exception('Job failed.');
@@ -56,5 +64,11 @@
   }
   catch (Exception $e) {
     header('Cache-Control: no-cache, must-revalidate');
-    echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString(), 'adminEmail' => $configs->config['admin_email']]);
+
+    if ($e->getMessage() == 'Job failed.') {
+      echo $templates->render('jobFailed', ['adminEmail' => $configs->config['admin_email']]);
+    }
+    else {
+      echo $templates->render('exception', ['showError' => true, 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString(), 'adminEmail' => $configs->config['admin_email']]);
+    }
   }

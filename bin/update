@@ -1,0 +1,125 @@
+#!/usr/bin/env php
+<?php
+  require dirname(__DIR__) . '/vendor/autoload.php';
+  $configs = new Geneticdrift\Config;
+  $info = new Geneticdrift\Info;
+
+  if ($configs->config['update']['method'] == 'github') {
+    $client = new \Github\Client(); $client->authenticate($configs->config['automatic_update']['method']['token'], , Github\Client::AUTH_HTTP_TOKEN);
+
+    $commits = $client->api('repo')->commits()->all('andrewying',
+      'genetic_drift',
+      array(
+        'sha' => 'master',
+        'since' => $info->version['timestamp']
+        )
+    );
+
+    $commitsArray = array();
+
+    foreach($commits as $commit) {
+      $commitTime = strtotime($commit->commit->committer->date);
+      $commitSha = $commit->sha;
+      $commitUrl = $commit->html_url;
+      $commitComment = $commit->commit->message;
+
+      $commitCompare = $client->api('repo')->commits()->compare('andrewying', 'genetic_drift', $info->version['version'], $commitSha);
+      $commitPatch = $commitCompare->patch_url;
+
+      $commitsArray[$commitTime] = array(
+        'sha' => $commitSha,
+        'comment' => $commitComment,
+        'url' => $commitDetails,
+        'time' => $commit->commit->committer->date,
+        'patch' => $commitPatch
+      );
+    }
+    ksort($commitsArray);
+
+    if (empty($commitsArray)){
+      die('No update available.');
+    }
+
+    if (!$configs->config['automatic_update']) {
+      $writeContent = json_encode($commitsArray);
+      file_put_contents($configs->config['web_root'] . '/data/updates.json', $writeContent);
+    }
+    else {
+      $commit = end($commitsArray);
+      $patch = array(
+        'version' => $commit['sha'],
+        'time' => $commit['time'],
+        'patch' => $commit['patch']
+      );
+    }
+  }
+  else {
+    die('Configuration file corrupted.');
+  }
+
+  if ($argv[1] == 'manual_update') {
+    if (isset($argv[2])) {
+      $client = new \Github\Client(); $client->authenticate($configs->config['automatic_update']['method']['token'], , Github\Client::AUTH_HTTP_TOKEN);
+
+      $commitCompare = $client->api('repo')->commits()->compare('andrewying', 'genetic_drift', $info->version['version'], $argv[2]);
+      if (!$commitCompare) {
+        die('Unable to retrieve commit named.');
+      }
+      $commitPatch = $commitCompare->patch_url;
+
+      $commit = $client->api('repo')->commits()->show('andrewying', 'genetic_drift', $argv[2]);
+      $commitTime = $commit->commit->committer->date;
+
+      $patch = array(
+        'version' => $argv[2],
+        'time' => $commitTime,
+        'patch' => $commitPatch
+      );
+    }
+    else {
+      $encodedArray = file_get_contents($configs->config['web_root'] . '/data/updates.json');
+      if(empty($encodedArray)) {
+        die('No update available.');
+      }
+      $array = json_decode($encodedArray, TRUE);
+
+      ksort($array);
+      $commit = end($array);
+
+      $patch = array(
+        'version' => $commit['sha'],
+        'time' => $commit['time'],
+        'patch' => $commit['patch']
+      );
+    }
+  }
+
+  if (isset($patch)) {
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $patch['patch']);
+    curl_setopt($ch, CURLOPT_USERPWD, $configs->config['automatic_update']['method']['token'] . ':x-oauth-basic');
+    curl_setopt($ch, CURLOPT_USERAGENT, 'AY-AppUpdate/1.0 (+http://apps.andrewying.com)');
+    curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+    $output = curl_exec($ch);
+
+    if (!$output) {
+      die('Unable to obtain patch file.');
+    }
+
+    file_put_contents($configs->config['web_root'] . '/tmp.patch', $output);
+    chdir($configs->config['web_root'])
+    exec('patch < tmp.patch');
+    unlink(tmp.patch);
+
+    $info = file_get_contents($configs->config['web_root'] . '/config/Info.php');
+
+    $info = str_replace($info->version['version'], $patch['version'], $info);
+    $info = str_replace($info->version['timestamp'], $patch['time'], $info);
+
+    file_put_contents($configs->config['web_root'] . '/config/Info.php');
+  }

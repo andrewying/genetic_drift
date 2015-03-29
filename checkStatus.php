@@ -6,6 +6,14 @@
   $templates = new League\Plates\Engine($configs->config['web_root'] . '/templates');
   $templates->loadExtension(new League\Plates\Extension\Asset($configs->config['web_root']));
 
+  $status = $configs->appStatus();
+  if (!$status) {
+    header('Cache-Control: no-cache, must-revalidate');
+    
+    echo $templates->render('maintenance', ['adminEmail' => $configs->config['admin_email']]);
+    exit;
+  }
+
   try {
     if (!$_GET['key']) {
       throw new Exception('Invalid GET request. No data received.');
