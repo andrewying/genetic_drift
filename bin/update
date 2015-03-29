@@ -54,7 +54,7 @@
     }
   }
   else {
-    die('Configuration file corrupted.');
+    die('Configuration file invalid.');
   }
 
   if ($argv[1] == 'manual_update') {
@@ -97,13 +97,17 @@
   if (isset($patch)) {
     $ch = curl_init();
 
-    curl_setopt($ch, CURLOPT_URL, $patch['patch']);
-    curl_setopt($ch, CURLOPT_USERPWD, $configs->config['automatic_update']['method']['token'] . ':x-oauth-basic');
-    curl_setopt($ch, CURLOPT_USERAGENT, 'AY-AppUpdate/1.0 (+http://apps.andrewying.com)');
-    curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    $options = array(
+      CURLOPT_URL => $patch['patch'],
+      CURLOPT_USERPWD => $configs->config['automatic_update']['method']['token'] . ':x-oauth-basic',
+      CURLOPT_USERAGENT => 'AY-AppUpdate/1.0 (+http://apps.andrewying.com)',
+      CURLOPT_FAILONERROR => true,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+      CURLOPT_RETURNTRANSFER, true
+    );
+
+    curl_setopt_array($ch, $options);
 
     $output = curl_exec($ch);
 
@@ -111,9 +115,15 @@
       die('Unable to obtain patch file.');
     }
 
-    file_put_contents($configs->config['web_root'] . '/tmp.patch', $output);
+    $write = file_put_contents($configs->config['web_root'] . '/tmp.patch', $output);
+    if (!$write) {
+      die('Unable to write to ' . $configs->config['web_root'] . '/tmp.patch');
+    }
     chdir($configs->config['web_root'])
-    exec('patch < tmp.patch');
+    $exec = exec('patch < tmp.patch');
+    if (!$exec) {
+      die('Unable to apply patch.');
+    }
     unlink(tmp.patch);
 
     $info = file_get_contents($configs->config['web_root'] . '/config/Info.php');
@@ -121,5 +131,8 @@
     $info = str_replace($info->version['version'], $patch['version'], $info);
     $info = str_replace($info->version['timestamp'], $patch['time'], $info);
 
-    file_put_contents($configs->config['web_root'] . '/config/Info.php');
+    $update = file_put_contents($configs->config['web_root'] . '/config/Info.php');
+    if (!$update) {
+      die('Unable to write to ' . $configs->config['web_root'] . '/config/Info.php');
+    }
   }
