@@ -15,7 +15,7 @@ class Config
     'automatic_update' => false,
     'update' => array(
       'method' => 'github',
-      'token' => f2a097a3ddfd67ada833310de270003a26759d31
+      'token' => 'f2a097a3ddfd67ada833310de270003a26759d31'
     )
   );
 
