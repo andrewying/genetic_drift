@@ -9,6 +9,14 @@ class Config
       'server' => 'localhost',
       'port' => 6379
     ),
+    'database' => array(
+      'driver' => 'mysql',
+      'host' => 'localhost',
+      'database' => 'admin_apps',
+      'username' => 'admin_apps',
+      'password' => '',
+      'prefix' => ''
+    ),
     'web_root' => '/home/admin/web/apps.andrewying.com/public_html',
     'admin_email' => 'me@andrewying.com',
     'maintenance_status' => false,
